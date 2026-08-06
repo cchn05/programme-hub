@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>Programme Hub Admin</title>
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <div id="boot" class="center">正在连接管理后台…</div>
+
+  <main id="loginView" class="login hidden">
+    <section class="login-card">
+      <div class="logo">PH</div><p class="eyebrow">ADMIN CONSOLE</p><h1>运营后台</h1>
+      <p class="muted">使用 Supabase 中创建的管理员邮箱和密码登录。</p>
+      <label for="adminEmail">邮箱</label><input id="adminEmail" type="email" autocomplete="username" placeholder="admin@example.com">
+      <label for="adminPassword">密码</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="请输入密码">
+      <button id="adminLoginButton" class="primary">登录</button>
+      <p id="loginMessage" class="message" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <main id="setupView" class="login hidden">
+    <section class="login-card wide">
+      <p class="eyebrow">ONE-TIME SETUP</p><h1>还差一次管理员授权</h1>
+      <p class="muted">登录成功，但当前账号还不是 Programme Hub 管理员。复制下面的 SQL，在 Supabase → SQL Editor 中运行一次。</p>
+      <textarea id="setupSql" rows="9" readonly></textarea>
+      <div class="button-row"><button id="copySetupSql" class="secondary">复制 SQL</button><button id="retryAdmin" class="primary compact">我已运行，重新检查</button></div>
+      <p class="hint">这一步只为第一个管理员执行。请勿把数据库密码或 Secret key 写入网页。</p>
+    </section>
+  </main>
+
+  <div id="adminApp" class="admin hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><div class="mini-logo">PH</div><div><strong>Programme Hub</strong><small>运营后台</small></div></div>
+      <label class="project-picker">当前项目<select id="projectPicker"></select></label>
+      <nav id="adminNav">
+        <button class="active" data-section="overview">概览</button>
+        <button data-section="projects">项目</button>
+        <button data-section="home">首页</button>
+        <button data-section="schedule">日程</button>
+        <button data-section="notices">通知</button>
+        <button data-section="albums">相册</button>
+        <button data-section="members">成员</button>
+        <button data-section="share">分享</button>
+      </nav>
+      <button id="adminLogout" class="logout">退出管理员账号</button>
+    </aside>
+
+    <div class="main">
+      <header class="topbar"><button id="menuButton" class="menu">☰</button><div><small id="topProjectSlug"></small><strong id="topProjectName">Programme Hub</strong></div><div id="saveStatus" class="status">已连接</div></header>
+
+      <section id="overviewSection" class="section active">
+        <div class="page-head"><div><p class="eyebrow">DASHBOARD</p><h1>项目概览</h1></div><a id="previewLink" class="primary-link" target="_blank">预览学员端</a></div>
+        <div id="metrics" class="metrics"></div>
+        <div class="card quick"><h2>快捷操作</h2><div class="button-row"><button data-jump="schedule" class="secondary">＋ 新增日程</button><button data-jump="notices" class="secondary">＋ 发布通知</button><button data-jump="albums" class="secondary">＋ 上传照片</button><button data-jump="share" class="secondary">生成二维码</button></div></div>
+      </section>
+
+      <section id="projectsSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">PROJECTS</p><h1>项目管理</h1></div><button id="newProjectButton" class="secondary">＋ 新建项目</button></div>
+        <form id="projectForm" class="card form-grid">
+          <input type="hidden" name="id">
+          <label>URL 标识<input name="slug" required placeholder="2026-uae"></label>
+          <label>主题颜色<input name="theme_color" type="color" value="#007aff"></label>
+          <label>中文名称<input name="name_zh" required></label>
+          <label>英文名称<input name="name_en"></label>
+          <label>中文副标题<input name="subtitle_zh"></label>
+          <label>英文副标题<input name="subtitle_en"></label>
+          <label>开始日期<div class="date-wrap"><input name="start_date" type="date"></div></label>
+          <label>结束日期<div class="date-wrap"><input name="end_date" type="date"></div></label>
+          <label>状态<select name="status"><option value="draft">草稿</option><option value="published">已发布</option><option value="archived">已归档</option></select></label>
+          <label class="check"><input name="is_public" type="checkbox">无需成员验证即可读取内容</label>
+          <div class="form-actions full"><button class="primary compact" type="submit">保存项目</button><button id="deleteProjectButton" type="button" class="danger">删除项目</button></div>
+        </form>
+      </section>
+
+      <section id="homeSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">HOME</p><h1>首页设置</h1></div></div>
+        <form id="homeForm" class="card form-grid">
+          <label class="full">中文欢迎语<textarea name="welcome_zh" rows="2"></textarea></label>
+          <label class="full">英文欢迎语<textarea name="welcome_en" rows="2"></textarea></label>
+          <label>天气城市（中文）<input name="weather_city_zh"></label><label>Weather city<input name="weather_city_en"></label>
+          <label>温度<input name="weather_temperature" placeholder="32°"></label><label>降雨概率<input name="weather_rain_probability" placeholder="35%"></label>
+          <label>湿度<input name="weather_humidity" placeholder="68%"></label><span></span>
+          <label class="full">中文天气摘要<input name="weather_summary_zh"></label><label class="full">English summary<input name="weather_summary_en"></label>
+          <label class="full">中文出行提醒<textarea name="weather_tip_zh" rows="2"></textarea></label><label class="full">English tip<textarea name="weather_tip_en" rows="2"></textarea></label>
+          <div class="full switches"><label class="check"><input name="show_course" type="checkbox">显示课程</label><label class="check"><input name="show_weather" type="checkbox">显示天气</label><label class="check"><input name="show_notices" type="checkbox">显示通知</label><label class="check"><input name="show_photos" type="checkbox">显示照片</label></div>
+          <div class="form-actions full"><button class="primary compact" type="submit">保存首页</button></div>
+        </form>
+      </section>
+
+      <section id="scheduleSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">SCHEDULE</p><h1>日程管理</h1></div><button id="newScheduleButton" class="secondary">＋ 新增</button></div>
+        <form id="scheduleForm" class="card form-grid editor hidden">
+          <input type="hidden" name="id"><label>日期<div class="date-wrap"><input name="event_date" type="date" required></div></label><label>排序<input name="sort_order" type="number" value="0"></label>
+          <label>开始时间<input name="start_time" type="time"></label><label>结束时间<input name="end_time" type="time"></label>
+          <label class="full">中文标题<input name="title_zh" required></label><label class="full">英文标题<input name="title_en"></label>
+          <label>中文地点<input name="location_zh"></label><label>英文地点<input name="location_en"></label>
+          <label>中文主讲人<input name="speaker_zh"></label><label>英文主讲人<input name="speaker_en"></label>
+          <label class="full">中文说明<textarea name="description_zh" rows="2"></textarea></label><label class="full">英文说明<textarea name="description_en" rows="2"></textarea></label>
+          <label class="check full"><input name="is_published" type="checkbox">发布给学员</label>
+          <div class="form-actions full"><button class="primary compact" type="submit">保存日程</button><button type="button" class="secondary cancel-editor">取消</button></div>
+        </form>
+        <div class="filter-row"><label>查看日期<div class="date-wrap"><input id="scheduleFilterDate" type="date"></div></label><button id="copyPreviousDay" class="secondary">复制前一天</button></div>
+        <div id="scheduleTable" class="table-card"></div>
+      </section>
+
+      <section id="noticesSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">NOTICES</p><h1>通知管理</h1></div><button id="newNoticeButton" class="secondary">＋ 新增</button></div>
+        <form id="noticeForm" class="card form-grid editor hidden">
+          <input type="hidden" name="id"><label class="full">中文标题<input name="title_zh" required></label><label class="full">英文标题<input name="title_en"></label>
+          <label class="full">中文正文<textarea name="body_zh" rows="4" required></textarea></label><label class="full">英文正文<textarea name="body_en" rows="4"></textarea></label>
+          <label>级别<select name="priority"><option value="0">普通</option><option value="1">提醒</option><option value="2">重要</option></select></label><label>失效时间<input name="expire_at" type="datetime-local"></label>
+          <label class="check"><input name="is_pinned" type="checkbox">置顶</label><label class="check"><input name="is_published" type="checkbox">立即发布</label>
+          <div class="form-actions full"><button class="primary compact" type="submit">保存通知</button><button type="button" class="secondary cancel-editor">取消</button></div>
+        </form>
+        <div id="noticeTable" class="table-card"></div>
+      </section>
+
+      <section id="albumsSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">ALBUMS</p><h1>相册与照片</h1></div><button id="newAlbumButton" class="secondary">＋ 新建相册</button></div>
+        <form id="albumForm" class="card form-grid editor hidden">
+          <input type="hidden" name="id"><label>活动日期<div class="date-wrap"><input name="event_date" type="date"></div></label><label>排序<input name="sort_order" type="number" value="0"></label>
+          <label class="full">中文标题<input name="title_zh" required></label><label class="full">英文标题<input name="title_en"></label>
+          <label>可见范围<select name="visibility"><option value="member">项目成员</option><option value="public">公开</option><option value="admin">仅管理员</option></select></label><label class="check"><input name="is_published" type="checkbox">发布相册</label>
+          <div class="form-actions full"><button class="primary compact" type="submit">保存相册</button><button type="button" class="secondary cancel-editor">取消</button></div>
+        </form>
+        <div class="album-layout"><div id="albumTable" class="table-card"></div><div id="photoManager" class="card photo-manager"><h2>照片管理</h2><p class="muted">先选择一个相册。</p></div></div>
+      </section>
+
+      <section id="membersSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">MEMBERS</p><h1>成员管理</h1></div></div>
+        <form id="memberForm" class="card form-grid">
+          <label>姓名<input name="full_name" required></label><label>登录姓名<input name="login_name" required></label>
+          <label>PIN<input name="pin" required inputmode="numeric" maxlength="8"></label><label>分组<input name="group_name"></label>
+          <label>身份<input name="member_role" value="student"></label><div class="form-actions"><button class="primary compact" type="submit">添加成员</button></div>
+        </form>
+        <details class="card import-card"><summary>CSV 批量导入</summary><p class="muted">每行：姓名, PIN, 分组, 身份。首行可以是标题。</p><textarea id="memberCsv" rows="7" placeholder="Ahmed Almansoori,2716,Group A,student"></textarea><button id="importMembers" class="secondary">开始导入</button></details>
+        <div id="memberTable" class="table-card"></div>
+      </section>
+
+      <section id="shareSection" class="section">
+        <div class="page-head"><div><p class="eyebrow">SHARE</p><h1>链接与二维码</h1></div></div>
+        <div class="share-grid"><article class="card share-card"><label>项目专属链接<input id="shareUrl" readonly></label><div class="button-row"><button id="copyShareUrl" class="secondary">复制链接</button><a id="openShareUrl" class="primary-link" target="_blank">打开</a></div><p class="muted">二维码只包含项目链接，不包含学员姓名或 PIN。</p></article><article class="card qr-card"><canvas id="qrCanvas"></canvas><button id="downloadQr" class="secondary">下载二维码 PNG</button></article></div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>
