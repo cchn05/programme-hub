@@ -1,82 +1,125 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f5f7">
-<title>Programme Hub</title>
-<style>
-:root{--accent:#007aff;--bg:#f5f5f7;--card:#fff;--text:#1d1d1f;--muted:#6e6e73;--line:#e5e5ea;--danger:#ff3b30;--shadow:0 16px 44px rgba(0,0,0,.07)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}.hidden{display:none!important}.shell{width:min(100%,980px);margin:auto;min-height:100vh}.card{background:var(--card);border:1px solid var(--line);border-radius:25px;box-shadow:var(--shadow)}
-.login{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 12% 0,rgba(0,122,255,.15),transparent 32rem)}.login-box{width:min(100%,520px);padding:30px}.logo{width:58px;height:58px;border-radius:18px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.12em;margin:25px 0 9px}.login h1{font-size:42px;letter-spacing:-.05em;line-height:1.05;margin:0 0 10px}.sub{color:var(--muted);line-height:1.6;margin:0 0 24px}.label{display:block;color:var(--muted);font-size:13px;font-weight:700;margin:20px 0 9px}.project-list{display:grid;gap:10px}.project-option{width:100%;border:1px solid var(--line);background:#fff;border-radius:18px;padding:13px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}.project-option.selected{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%,transparent)}.project-badge{width:43px;height:43px;border-radius:13px;color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 auto}.project-copy{min-width:0}.project-copy strong,.project-copy small{display:block}.project-copy small{color:var(--muted);margin-top:3px}.radio{width:18px;height:18px;border:2px solid var(--line);border-radius:50%;margin-left:auto;flex:0 0 auto}.project-option.selected .radio{border:5px solid var(--accent)}.name-input{width:100%;border:1px solid var(--line);border-radius:16px;padding:15px 16px;background:#fafafa;outline:none;-webkit-appearance:none}.name-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,122,255,.1)}.enter-button{width:100%;border:0;border-radius:16px;background:var(--accent);color:#fff;padding:15px;font-weight:800;margin-top:16px;cursor:pointer;-webkit-tap-highlight-color:transparent}.enter-button:disabled{opacity:.35;cursor:not-allowed}.error{display:none;color:var(--danger);font-size:13px;margin-top:10px}.error.show{display:block}
-.app{padding:0 16px 104px}.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;background:rgba(245,245,247,.84);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}.brand{font-weight:800}.top-actions{display:flex;gap:9px}.round{height:38px;min-width:38px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:800;padding:0 11px}.page{display:none}.page.active{display:block}.hero{padding:36px 0 24px}.date{color:var(--accent);font-size:13px;font-weight:800}.hero h1{font-size:clamp(38px,8vw,64px);letter-spacing:-.055em;line-height:1.02;margin:9px 0 10px}.hero p{color:var(--muted);font-size:17px;margin:0}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:15px}.stack{display:grid;gap:15px}.module{overflow:hidden}.module-head{display:flex;align-items:center;justify-content:space-between;padding:21px 22px 8px}.module-head h2{font-size:18px;margin:0}.text-button{border:0;background:none;color:var(--accent);font-weight:700;padding:6px}.course{padding:7px 22px 23px}.course-time{color:var(--accent);font-weight:800;font-size:14px;margin:10px 0}.course h3{font-size:clamp(27px,5vw,40px);letter-spacing:-.04em;line-height:1.08;margin:0 0 20px}.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#f2f2f7;border-radius:12px;padding:9px 11px;color:var(--muted);font-size:13px}.notice-list{padding:4px 17px 16px}.notice{display:grid;grid-template-columns:8px 1fr auto;gap:11px;padding:14px 4px;border-bottom:1px solid var(--line)}.notice:last-child{border:0}.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:6px}.dot.important{background:var(--danger)}.notice strong{font-size:14px}.notice p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.5}.notice time{font-size:11px;color:var(--muted)}.weather{padding:8px 22px 22px}.temp{font-size:68px;font-weight:300;letter-spacing:-.08em}.condition{color:var(--muted);margin:3px 0 15px}.tip{background:rgba(0,122,255,.09);border-radius:14px;padding:13px;font-size:13px;line-height:1.55;margin-top:14px}.photos{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);gap:11px;overflow-x:auto;padding:8px 17px 20px}.photo{aspect-ratio:4/3;border-radius:18px;position:relative;overflow:hidden;background:linear-gradient(145deg,var(--c1),var(--c2))}.photo:before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.24);right:-20px;top:-20px}.photo:after{content:"";position:absolute;width:170px;height:70px;border-radius:30px;background:rgba(255,255,255,.18);left:20px;top:40px}.caption{position:absolute;left:0;right:0;bottom:0;padding:45px 14px 13px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff}.caption strong,.caption small{display:block}.caption small{opacity:.8;margin-top:4px}.page-head{padding:40px 0 18px}.page-head small{color:var(--accent);font-weight:800}.page-head h1{font-size:44px;letter-spacing:-.05em;margin:6px 0}.timeline{padding:12px 21px}.timeline-row{display:grid;grid-template-columns:68px 22px 1fr;min-height:86px}.timeline-time{padding-top:18px;font-weight:800}.axis{position:relative}.axis:before{content:"";position:absolute;left:10px;top:0;bottom:0;width:1px;background:var(--line)}.axis:after{content:"";position:absolute;left:6px;top:23px;width:9px;height:9px;border-radius:50%;background:var(--muted)}.timeline-row.current .axis:after{background:var(--accent);box-shadow:0 0 0 6px rgba(0,122,255,.12)}.timeline-copy{padding:17px 0;border-bottom:1px solid var(--line)}.timeline-copy span{display:block;color:var(--muted);font-size:13px;margin-top:5px}.notice-cards{display:grid;gap:11px}.notice-card{padding:20px 21px}.tag{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(0,122,255,.1);color:var(--accent);font-size:11px;font-weight:800}.tag.important{background:rgba(255,59,48,.1);color:var(--danger)}.notice-card h3{margin:12px 0 7px}.notice-card p{color:var(--muted);line-height:1.65;margin:0}.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.photo-grid .photo{aspect-ratio:1}.profile{max-width:650px;padding:23px}.profile-top{display:flex;gap:15px;align-items:center;padding-bottom:19px;border-bottom:1px solid var(--line)}.avatar{width:58px;height:58px;border-radius:18px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:23px;font-weight:800}.profile-top h3{margin:0}.profile-top p{margin:5px 0 0;color:var(--muted)}.profile-row{display:flex;justify-content:space-between;padding:17px 0;border-bottom:1px solid var(--line)}.profile-row span:last-child{color:var(--muted)}.logout{width:100%;border:0;border-radius:15px;background:rgba(255,59,48,.1);color:var(--danger);padding:14px;font-weight:800;margin-top:18px}.nav{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(calc(100% - 28px),620px);display:grid;grid-template-columns:repeat(5,1fr);padding:7px;background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:23px;box-shadow:0 14px 40px rgba(0,0,0,.15);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);z-index:20}.nav button{border:0;background:none;border-radius:17px;padding:8px 2px;color:var(--muted);font-size:11px;font-weight:700}.nav button.active{background:rgba(0,122,255,.09);color:var(--accent)}.nav b{display:block;font-size:18px;margin-bottom:2px}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.photo-grid{grid-template-columns:repeat(2,1fr)}.notice{grid-template-columns:8px 1fr}.notice time{grid-column:2}.login-box{padding:26px}.login h1{font-size:37px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>Programme Hub</title>
+  <link rel="stylesheet" href="./assets/site.css">
 </head>
 <body>
-<div class="shell">
-<section id="loginView" class="login">
-<div class="login-box card">
-<div class="logo">PH</div>
-<div class="eyebrow">PROGRAMME HUB</div>
-<h1>欢迎回来</h1>
-<p class="sub">请选择项目并输入姓名，查看今天的课程、天气、通知和照片。</p>
-<span class="label">选择项目</span>
-<div id="projectList" class="project-list">
-<button type="button" class="project-option selected" data-project="uae"><span class="project-badge" style="background:#007aff">UAE</span><span class="project-copy"><strong>2026 UAE</strong><small>Summer Chinese Programme</small></span><i class="radio"></i></button>
-<button type="button" class="project-option" data-project="principals"><span class="project-badge" style="background:#af1f2d">华校</span><span class="project-copy"><strong>2026 华校校长</strong><small>Overseas Chinese Educators</small></span><i class="radio"></i></button>
-<button type="button" class="project-option" data-project="vietnam"><span class="project-badge" style="background:#008f74">VN</span><span class="project-copy"><strong>2025 越南大学生</strong><small>Vietnam University Programme</small></span><i class="radio"></i></button>
-</div>
-<label class="label" for="userName">姓名</label>
-<input id="userName" class="name-input" type="text" autocomplete="name" placeholder="请输入你的姓名">
-<button id="enterButton" type="button" class="enter-button" disabled>进入项目</button>
-<div id="loginError" class="error">请输入姓名后再进入。</div>
-</div>
-</section>
-<section id="appView" class="app hidden">
-<header class="topbar"><div id="brandName" class="brand"></div><div class="top-actions"><button id="languageButton" type="button" class="round">EN</button><button id="profileButton" type="button" class="round">U</button></div></header>
-<main>
-<section id="homePage" class="page active"><div class="hero"><div id="dateText" class="date"></div><h1 id="greetingText"></h1><p id="welcomeText"></p></div><div class="grid"><div class="stack"><article class="module card"><div class="module-head"><h2 data-i18n="todayCourse">今日课程</h2><button type="button" class="text-button" data-page-link="schedule">查看全部</button></div><div class="course"><div id="courseTime" class="course-time"></div><h3 id="courseTitle"></h3><div class="pills"><span id="speakerText" class="pill"></span><span id="locationText" class="pill"></span></div></div></article><article class="module card"><div class="module-head"><h2 data-i18n="latestNotices">最新通知</h2><button type="button" class="text-button" data-page-link="notices">查看全部</button></div><div id="homeNoticeList" class="notice-list"></div></article></div><div class="stack"><article class="module card"><div class="module-head"><h2 data-i18n="weather">今日天气</h2><span id="cityText"></span></div><div class="weather"><div id="temperatureText" class="temp"></div><div id="conditionText" class="condition"></div><div class="pills"><span id="rainText" class="pill"></span><span id="humidityText" class="pill"></span></div><div id="weatherTip" class="tip"></div></div></article><article class="module card"><div class="module-head"><h2 data-i18n="todayPhotos">今日照片</h2><button type="button" class="text-button" data-page-link="photos">查看全部</button></div><div id="homePhotoList" class="photos"></div></article></div></div></section>
-<section id="schedulePage" class="page"><div class="page-head"><small>PROGRAMME</small><h1 data-i18n="schedule">日程</h1></div><div id="timelineList" class="timeline card"></div></section>
-<section id="noticesPage" class="page"><div class="page-head"><small>UPDATES</small><h1 data-i18n="notices">通知</h1></div><div id="noticeCardList" class="notice-cards"></div></section>
-<section id="photosPage" class="page"><div class="page-head"><small>MOMENTS</small><h1 data-i18n="photos">照片</h1></div><div id="photoGrid" class="photo-grid"></div></section>
-<section id="profilePage" class="page"><div class="page-head"><small>ACCOUNT</small><h1 data-i18n="profile">我的</h1></div><div class="profile card"><div class="profile-top"><div id="profileAvatar" class="avatar">U</div><div><h3 id="profileName"></h3><p id="profileProject"></p></div></div><div class="profile-row"><span data-i18n="project">项目</span><span id="profileProjectDetail"></span></div><div class="profile-row"><span data-i18n="language">语言</span><span id="profileLanguage"></span></div><button id="logoutButton" type="button" class="logout">切换项目 / 退出</button></div></section>
-</main>
-<nav class="nav"><button type="button" class="active" data-page="home"><b>⌂</b><span data-i18n="home">首页</span></button><button type="button" data-page="schedule"><b>◷</b><span data-i18n="schedule">日程</span></button><button type="button" data-page="notices"><b>◉</b><span data-i18n="notices">通知</span></button><button type="button" data-page="photos"><b>▧</b><span data-i18n="photos">照片</span></button><button type="button" data-page="profile"><b>♙</b><span data-i18n="profile">我的</span></button></nav>
-</section>
-</div>
-<script>
-(function(){
-'use strict';
-var PROJECTS={
-uae:{name:'2026 UAE',accent:'#007aff',welcomeZh:'今天的重要信息，都在这里。',welcomeEn:'Everything important for today, in one place.',course:{time:'09:00–12:00',zh:'中华文化教学多模态资源的生成与使用',en:'Creating and Using Multimodal Resources for Chinese Culture Teaching',speakerZh:'张天池',speakerEn:'Zhang Tianchi',placeZh:'物理楼二楼报告厅',placeEn:'Physics Building, 2F Auditorium'},weather:{cityZh:'上海',cityEn:'Shanghai',temp:'32°',conditionZh:'多云 · 最高 35° / 最低 27°',conditionEn:'Cloudy · H 35° / L 27°',rain:'35%',humidity:'68%',tipZh:'下午可能有阵雨，记得带伞并注意防暑。',tipEn:'Possible afternoon showers. Bring an umbrella and stay hydrated.'},schedule:[['08:40','酒店发车','Depart from hotel'],['09:00','上午课程','Morning class'],['12:00','午餐','Lunch'],['13:45','前往新天地','Transfer to Xintiandi'],['18:30','上海马戏城','Shanghai Circus World']],notices:[['重要','IMPORTANT','明日上午请于 08:30 前在酒店大堂集合。','Meet in the hotel lobby before 8:30 tomorrow morning.',1],['行程调整','SCHEDULE UPDATE','今日返程时间调整为 20:00。','Today’s return time has been changed to 20:00.',0]]},
-principals:{name:'2026 华校校长',accent:'#af1f2d',welcomeZh:'课程安排、重要通知与活动照片一目了然。',welcomeEn:'Courses, updates and programme moments at a glance.',course:{time:'09:00–12:00',zh:'华文教育与国家文化软实力',en:'Chinese Education and National Cultural Soft Power',speakerZh:'曹秀玲',speakerEn:'Cao Xiuling',placeZh:'物理楼二楼报告厅',placeEn:'Physics Building, 2F Auditorium'},weather:{cityZh:'上海',cityEn:'Shanghai',temp:'32°',conditionZh:'多云 · 最高 35° / 最低 27°',conditionEn:'Cloudy · H 35° / L 27°',rain:'35%',humidity:'68%',tipZh:'天气炎热，请及时补水。',tipEn:'Hot weather today. Stay hydrated.'},schedule:[['08:10','酒店发车','Depart from hotel'],['09:00','专题讲座','Featured lecture'],['12:00','午餐','Lunch'],['13:30','下午活动','Afternoon activity'],['17:00','返回酒店','Return to hotel']],notices:[['提醒','REMINDER','请携带学员证并按大巴分配表乘车。','Bring your programme badge and follow the bus allocation list.',1],['资料更新','MATERIALS','今日讲座资料已更新。','Today’s lecture materials have been updated.',0]]},
-vietnam:{name:'2025 越南大学生',accent:'#008f74',welcomeZh:'你的每日课程与活动信息。',welcomeEn:'Your daily classes and activities.',course:{time:'09:00–11:30',zh:'中国文化体验课程',en:'Chinese Culture Experience',speakerZh:'项目教师',speakerEn:'Programme Faculty',placeZh:'教学楼 206',placeEn:'Teaching Building 206'},weather:{cityZh:'上海',cityEn:'Shanghai',temp:'31°',conditionZh:'晴间多云 · 最高 34° / 最低 26°',conditionEn:'Partly cloudy · H 34° / L 26°',rain:'20%',humidity:'65%',tipZh:'有户外活动，建议做好防晒。',tipEn:'Outdoor activities today. Sun protection is recommended.'},schedule:[['08:30','集合出发','Meet and depart'],['09:00','上午课程','Morning class'],['11:30','午餐','Lunch'],['14:00','文化参访','Cultural visit'],['17:30','自由活动','Free time']],notices:[['集合提醒','MEETING','请提前十分钟到达集合地点。','Arrive at the meeting point ten minutes early.',1],['照片更新','PHOTOS','昨日活动照片已经上传。','Yesterday’s activity photos are now available.',0]]}
-};
-var I18N={zh:{todayCourse:'今日课程',latestNotices:'最新通知',weather:'今日天气',todayPhotos:'今日照片',photos:'照片',schedule:'日程',notices:'通知',profile:'我的',project:'项目',language:'语言',home:'首页'},en:{todayCourse:"Today’s Course",latestNotices:'Latest Notices',weather:"Today’s Weather",todayPhotos:"Today’s Photos",photos:'Photos',schedule:'Schedule',notices:'Notices',profile:'Me',project:'Project',language:'Language',home:'Home'}};
-var state={project:'uae',name:'',lang:'zh',page:'home'};
-function byId(id){return document.getElementById(id)}
-function readStore(key){try{return window.localStorage.getItem(key)||''}catch(e){return ''}}
-function writeStore(key,value){try{window.localStorage.setItem(key,value)}catch(e){}}
-function removeStore(key){try{window.localStorage.removeItem(key)}catch(e){}}
-function setTheme(){document.documentElement.style.setProperty('--accent',PROJECTS[state.project].accent)}
-function selectProject(projectKey){if(!PROJECTS[projectKey])return;state.project=projectKey;setTheme();var buttons=document.querySelectorAll('.project-option');for(var i=0;i<buttons.length;i++){buttons[i].classList.toggle('selected',buttons[i].getAttribute('data-project')===projectKey)}}
-function validateLogin(){var value=byId('userName').value.replace(/^\s+|\s+$/g,'');byId('enterButton').disabled=value.length===0;byId('loginError').classList.remove('show')}
-function formatDate(){try{return new Intl.DateTimeFormat(state.lang==='zh'?'zh-CN':'en-US',{month:'long',day:'numeric',weekday:'long'}).format(new Date())}catch(e){return new Date().toLocaleDateString()}}
-function greeting(){var hour=new Date().getHours();if(state.lang==='en')return hour<12?'Good morning':hour<18?'Good afternoon':'Good evening';return hour<12?'早上好':hour<18?'下午好':'晚上好'}
-function text(zh,en){return state.lang==='zh'?zh:en}
-function photoMarkup(){var data=[['#3277d5','#8cc8ff',text('校园时光','Campus Moments'),text('12 张照片','12 photos')],['#af1f2d','#ffb7c3',text('今日课堂',"Today’s Class"),text('18 张照片','18 photos')],['#008f74','#8de1c9',text('上海印象','Shanghai Impressions'),text('24 张照片','24 photos')]];var html='';for(var i=0;i<data.length;i++){html+='<div class="photo" style="--c1:'+data[i][0]+';--c2:'+data[i][1]+'"><div class="caption"><strong>'+data[i][2]+'</strong><small>'+data[i][3]+'</small></div></div>'}return html}
-function render(){var p=PROJECTS[state.project];setTheme();byId('brandName').textContent=p.name;byId('dateText').textContent=formatDate();byId('greetingText').textContent=greeting()+'，'+state.name;byId('welcomeText').textContent=text(p.welcomeZh,p.welcomeEn);byId('courseTime').textContent=p.course.time;byId('courseTitle').textContent=text(p.course.zh,p.course.en);byId('speakerText').textContent=(state.lang==='zh'?'👤 主讲人：':'👤 Speaker: ')+text(p.course.speakerZh,p.course.speakerEn);byId('locationText').textContent='⌖ '+text(p.course.placeZh,p.course.placeEn);byId('cityText').textContent=text(p.weather.cityZh,p.weather.cityEn);byId('temperatureText').textContent=p.weather.temp;byId('conditionText').textContent=text(p.weather.conditionZh,p.weather.conditionEn);byId('rainText').textContent=(state.lang==='zh'?'降雨概率 ':'Rain ')+p.weather.rain;byId('humidityText').textContent=(state.lang==='zh'?'湿度 ':'Humidity ')+p.weather.humidity;byId('weatherTip').textContent=text(p.weather.tipZh,p.weather.tipEn);var initial=(state.name.charAt(0)||'U').toUpperCase();byId('profileButton').textContent=initial;byId('profileAvatar').textContent=initial;byId('profileName').textContent=state.name;byId('profileProject').textContent=p.name;byId('profileProjectDetail').textContent=p.name;byId('profileLanguage').textContent=state.lang==='zh'?'简体中文':'English';byId('languageButton').textContent=state.lang==='zh'?'EN':'中';var trans=document.querySelectorAll('[data-i18n]');for(var i=0;i<trans.length;i++){var key=trans[i].getAttribute('data-i18n');if(I18N[state.lang][key])trans[i].textContent=I18N[state.lang][key]}renderNotices(p);renderSchedule(p);var photos=photoMarkup();byId('homePhotoList').innerHTML=photos;byId('photoGrid').innerHTML=photos}
-function renderNotices(p){var home='';var cards='';for(var i=0;i<p.notices.length;i++){var n=p.notices[i];home+='<div class="notice"><span class="dot '+(n[4]?'important':'')+'"></span><div><strong>'+text(n[0],n[1])+'</strong><p>'+text(n[2],n[3])+'</p></div><time>'+text('今天','Today')+'</time></div>';cards+='<article class="notice-card card"><span class="tag '+(n[4]?'important':'')+'">'+text(n[0],n[1])+'</span><h3>'+text(n[0],n[1])+'</h3><p>'+text(n[2],n[3])+'</p></article>'}byId('homeNoticeList').innerHTML=home;byId('noticeCardList').innerHTML=cards}
-function renderSchedule(p){var html='';for(var i=0;i<p.schedule.length;i++){var item=p.schedule[i];html+='<div class="timeline-row '+(i===1?'current':'')+'"><div class="timeline-time">'+item[0]+'</div><div class="axis"></div><div class="timeline-copy"><strong>'+text(item[1],item[2])+'</strong><span>'+p.name+'</span></div></div>'}byId('timelineList').innerHTML=html}
-function showApp(){byId('loginView').classList.add('hidden');byId('appView').classList.remove('hidden');render();showPage('home')}
-function showLogin(){byId('appView').classList.add('hidden');byId('loginView').classList.remove('hidden');byId('userName').value=state.name;validateLogin()}
-function showPage(page){state.page=page;var pages=document.querySelectorAll('.page');for(var i=0;i<pages.length;i++)pages[i].classList.remove('active');var target=byId(page+'Page');if(target)target.classList.add('active');var buttons=document.querySelectorAll('[data-page]');for(var j=0;j<buttons.length;j++)buttons[j].classList.toggle('active',buttons[j].getAttribute('data-page')===page);window.scrollTo(0,0)}
-function enterProject(){var value=byId('userName').value.replace(/^\s+|\s+$/g,'');if(!value){byId('loginError').classList.add('show');return}state.name=value;writeStore('ph_project',state.project);writeStore('ph_name',state.name);writeStore('ph_lang',state.lang);showApp()}
-function bindEvents(){var projects=document.querySelectorAll('.project-option');for(var i=0;i<projects.length;i++){projects[i].addEventListener('click',function(){selectProject(this.getAttribute('data-project'))},false)}byId('userName').addEventListener('input',validateLogin,false);byId('userName').addEventListener('keyup',function(event){if(event.keyCode===13&&!byId('enterButton').disabled)enterProject()},false);byId('enterButton').addEventListener('click',enterProject,false);byId('languageButton').addEventListener('click',function(){state.lang=state.lang==='zh'?'en':'zh';writeStore('ph_lang',state.lang);render()},false);byId('profileButton').addEventListener('click',function(){showPage('profile')},false);byId('logoutButton').addEventListener('click',function(){removeStore('ph_name');removeStore('ph_project');state.name='';showLogin()},false);var nav=document.querySelectorAll('[data-page]');for(var j=0;j<nav.length;j++){nav[j].addEventListener('click',function(){showPage(this.getAttribute('data-page'))},false)}var links=document.querySelectorAll('[data-page-link]');for(var k=0;k<links.length;k++){links[k].addEventListener('click',function(){showPage(this.getAttribute('data-page-link'))},false)}}
-function init(){var savedProject=readStore('ph_project');var savedName=readStore('ph_name');var savedLang=readStore('ph_lang');if(PROJECTS[savedProject])state.project=savedProject;if(savedName)state.name=savedName;if(savedLang==='en')state.lang='en';selectProject(state.project);byId('userName').value=state.name;bindEvents();validateLogin();if(state.name)showApp()}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,false);else init();
-})();
-</script>
+  <div id="boot" class="boot">正在连接 Programme Hub…</div>
+
+  <main id="loginView" class="login-view hidden">
+    <section class="login-card">
+      <div class="logo">PH</div>
+      <p class="eyebrow">PROGRAMME HUB</p>
+      <h1>欢迎回来</h1>
+      <p class="muted">选择项目并验证身份，查看今天的课程、通知和照片。</p>
+
+      <label for="projectSelect">项目</label>
+      <select id="projectSelect"></select>
+
+      <label for="memberName">姓名</label>
+      <input id="memberName" autocomplete="name" placeholder="请输入名单中的姓名">
+
+      <label for="memberPin">个人 PIN</label>
+      <input id="memberPin" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="请输入 4–6 位 PIN">
+
+      <button id="loginButton" class="primary">进入项目</button>
+      <p id="loginMessage" class="message" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <div id="appView" class="app hidden">
+    <header class="topbar">
+      <div>
+        <small id="projectLabel">PROGRAMME</small>
+        <strong id="projectName"></strong>
+      </div>
+      <div class="top-actions">
+        <button id="languageButton" class="round" type="button">EN</button>
+        <button id="logoutButton" class="round" type="button" title="退出">↗</button>
+      </div>
+    </header>
+
+    <section id="homePage" class="page active">
+      <div class="hero">
+        <p id="dateText" class="accent"></p>
+        <h1 id="greetingText"></h1>
+        <p id="welcomeText" class="muted"></p>
+      </div>
+
+      <div class="dashboard-grid">
+        <article id="courseCard" class="card feature-card">
+          <div class="card-head"><h2 data-i18n="todayCourse">今日课程</h2><button class="link" data-page-link="schedule">查看全部</button></div>
+          <div id="courseEmpty" class="empty hidden">今天暂无已发布课程。</div>
+          <div id="courseContent">
+            <p id="courseTime" class="accent strong"></p>
+            <h3 id="courseTitle"></h3>
+            <div class="chips"><span id="courseSpeaker" class="chip"></span><span id="courseLocation" class="chip"></span></div>
+          </div>
+        </article>
+
+        <article id="weatherCard" class="card">
+          <div class="card-head"><h2 data-i18n="weather">今日天气</h2><span id="weatherCity"></span></div>
+          <div class="weather-body">
+            <div id="weatherTemperature" class="temperature">--°</div>
+            <p id="weatherSummary" class="muted"></p>
+            <div class="chips"><span id="weatherRain" class="chip"></span><span id="weatherHumidity" class="chip"></span></div>
+            <p id="weatherTip" class="weather-tip"></p>
+          </div>
+        </article>
+
+        <article id="noticeCard" class="card">
+          <div class="card-head"><h2 data-i18n="latestNotices">最新通知</h2><button class="link" data-page-link="notices">查看全部</button></div>
+          <div id="homeNotices" class="list"></div>
+        </article>
+
+        <article id="albumCard" class="card">
+          <div class="card-head"><h2 data-i18n="todayPhotos">今日照片</h2><button class="link" data-page-link="photos">查看全部</button></div>
+          <div id="homeAlbums" class="album-strip"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="schedulePage" class="page">
+      <div class="page-head"><p class="eyebrow">PROGRAMME</p><h1 data-i18n="schedule">日程</h1></div>
+      <div class="date-filter"><label for="scheduleDate">日期</label><input id="scheduleDate" type="date"></div>
+      <div id="scheduleList" class="timeline card"></div>
+    </section>
+
+    <section id="noticesPage" class="page">
+      <div class="page-head"><p class="eyebrow">UPDATES</p><h1 data-i18n="notices">通知</h1></div>
+      <div id="noticeList" class="notice-grid"></div>
+    </section>
+
+    <section id="photosPage" class="page">
+      <div class="page-head"><p class="eyebrow">MOMENTS</p><h1 data-i18n="photos">照片</h1></div>
+      <div id="albumList" class="album-grid"></div>
+      <section id="photoViewer" class="photo-viewer hidden">
+        <div class="viewer-head"><button id="closeViewer" class="link">← 返回相册</button><h2 id="viewerTitle"></h2></div>
+        <div id="photoList" class="photo-grid"></div>
+      </section>
+    </section>
+
+    <section id="profilePage" class="page">
+      <div class="page-head"><p class="eyebrow">ACCOUNT</p><h1 data-i18n="profile">我的</h1></div>
+      <article class="card profile-card">
+        <div class="avatar" id="profileAvatar">U</div>
+        <div><h2 id="profileName"></h2><p id="profileMeta" class="muted"></p></div>
+      </article>
+    </section>
+
+    <nav class="bottom-nav">
+      <button data-page="home" class="active"><b>⌂</b><span data-i18n="home">首页</span></button>
+      <button data-page="schedule"><b>◷</b><span data-i18n="schedule">日程</span></button>
+      <button data-page="notices"><b>◉</b><span data-i18n="notices">通知</span></button>
+      <button data-page="photos"><b>▧</b><span data-i18n="photos">照片</span></button>
+      <button data-page="profile"><b>♙</b><span data-i18n="profile">我的</span></button>
+    </nav>
+  </div>
+
+  <script type="module" src="./assets/app.js"></script>
 </body>
 </html>
