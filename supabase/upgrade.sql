@@ -1,10 +1,14 @@
 -- Programme Hub Cloud - admin helper functions
 -- Run after supabase/schema.sql.
+-- Safe to run repeatedly.
 -- Supabase installs pgcrypto in the extensions schema, so crypto functions are qualified explicitly.
 
 create schema if not exists extensions;
 create extension if not exists pgcrypto with schema extensions;
 
+-- Create or update a member by (project_id, login_name).
+-- Re-importing the same roster will update the existing member instead of failing
+-- with members_project_id_login_name_key.
 create or replace function public.create_member_with_pin(
   p_project_id uuid,
   p_full_name text,
@@ -20,26 +24,63 @@ set search_path = public, extensions
 as $$
 declare
   v_member_id uuid;
+  v_was_created boolean;
 begin
   if not public.can_manage_project(p_project_id) then
     raise exception 'Not permitted to manage this project';
   end if;
-  if length(trim(p_pin)) < 4 or length(trim(p_pin)) > 8 then
+
+  if trim(coalesce(p_full_name, '')) = '' then
+    raise exception 'Full name is required';
+  end if;
+
+  if trim(coalesce(p_login_name, '')) = '' then
+    raise exception 'Login name is required';
+  end if;
+
+  if length(trim(coalesce(p_pin, ''))) < 4 or length(trim(coalesce(p_pin, ''))) > 8 then
     raise exception 'PIN must contain 4 to 8 characters';
   end if;
 
-  insert into public.members (
-    project_id, full_name, login_name, pin_hash,
-    group_name, member_role, is_active
-  ) values (
-    p_project_id, trim(p_full_name), trim(p_login_name),
-    extensions.crypt(trim(p_pin), extensions.gen_salt('bf')),
-    nullif(trim(p_group_name), ''),
-    coalesce(nullif(trim(p_member_role), ''), 'student'), true
-  )
-  returning id into v_member_id;
+  select id into v_member_id
+  from public.members
+  where project_id = p_project_id
+    and lower(trim(login_name)) = lower(trim(p_login_name))
+  limit 1;
 
-  return jsonb_build_object('member_id', v_member_id);
+  if v_member_id is null then
+    insert into public.members (
+      project_id, full_name, login_name, pin_hash,
+      group_name, member_role, is_active
+    ) values (
+      p_project_id,
+      trim(p_full_name),
+      trim(p_login_name),
+      extensions.crypt(trim(p_pin), extensions.gen_salt('bf')),
+      nullif(trim(coalesce(p_group_name, '')), ''),
+      coalesce(nullif(trim(coalesce(p_member_role, '')), ''), 'student'),
+      true
+    )
+    returning id into v_member_id;
+
+    v_was_created := true;
+  else
+    update public.members
+    set full_name = trim(p_full_name),
+        login_name = trim(p_login_name),
+        pin_hash = extensions.crypt(trim(p_pin), extensions.gen_salt('bf')),
+        group_name = nullif(trim(coalesce(p_group_name, '')), ''),
+        member_role = coalesce(nullif(trim(coalesce(p_member_role, '')), ''), 'student'),
+        is_active = true
+    where id = v_member_id;
+
+    v_was_created := false;
+  end if;
+
+  return jsonb_build_object(
+    'member_id', v_member_id,
+    'created', v_was_created
+  );
 end;
 $$;
 
@@ -62,7 +103,8 @@ begin
   if v_project_id is null or not public.can_manage_project(v_project_id) then
     raise exception 'Not permitted to manage this member';
   end if;
-  if length(trim(p_new_pin)) < 4 or length(trim(p_new_pin)) > 8 then
+
+  if length(trim(coalesce(p_new_pin, ''))) < 4 or length(trim(coalesce(p_new_pin, ''))) > 8 then
     raise exception 'PIN must contain 4 to 8 characters';
   end if;
 
@@ -91,7 +133,14 @@ values
   ('2025-vietnam','2025 越南大学生','2025 Vietnam University Programme','Vietnam University Programme','#008f74','archived',false)
 on conflict (slug) do nothing;
 
-insert into public.project_home (project_id,welcome_zh,welcome_en,weather_city_zh,weather_city_en,show_course,show_weather,show_notices,show_photos)
-select id,'今天的重要信息，都在这里。','Everything important for today, in one place.','上海','Shanghai',true,true,true,true
+insert into public.project_home (
+  project_id,welcome_zh,welcome_en,weather_city_zh,weather_city_en,
+  show_course,show_weather,show_notices,show_photos
+)
+select
+  id,
+  '今天的重要信息，都在这里。',
+  'Everything important for today, in one place.',
+  '上海','Shanghai',true,true,true,true
 from public.projects
 on conflict (project_id) do nothing;
