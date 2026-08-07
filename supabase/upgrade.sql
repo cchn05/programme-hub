@@ -1,5 +1,9 @@
 -- Programme Hub Cloud - admin helper functions
 -- Run after supabase/schema.sql.
+-- Supabase installs pgcrypto in the extensions schema, so crypto functions are qualified explicitly.
+
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
 create or replace function public.create_member_with_pin(
   p_project_id uuid,
@@ -12,7 +16,7 @@ create or replace function public.create_member_with_pin(
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_member_id uuid;
@@ -29,7 +33,7 @@ begin
     group_name, member_role, is_active
   ) values (
     p_project_id, trim(p_full_name), trim(p_login_name),
-    crypt(trim(p_pin), gen_salt('bf')),
+    extensions.crypt(trim(p_pin), extensions.gen_salt('bf')),
     nullif(trim(p_group_name), ''),
     coalesce(nullif(trim(p_member_role), ''), 'student'), true
   )
@@ -47,7 +51,7 @@ create or replace function public.reset_member_pin(
 returns boolean
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_project_id uuid;
@@ -63,7 +67,7 @@ begin
   end if;
 
   update public.members
-  set pin_hash = crypt(trim(p_new_pin), gen_salt('bf')),
+  set pin_hash = extensions.crypt(trim(p_new_pin), extensions.gen_salt('bf')),
       auth_user_id = case when p_unclaim then null else auth_user_id end,
       claimed_at = case when p_unclaim then null else claimed_at end,
       is_active = true
@@ -75,6 +79,9 @@ $$;
 
 grant execute on function public.create_member_with_pin(uuid,text,text,text,text,text) to authenticated;
 grant execute on function public.reset_member_pin(uuid,text,boolean) to authenticated;
+
+-- Make the member login function resolve pgcrypto correctly on Supabase.
+alter function public.claim_member(text,text,text) set search_path = public, extensions;
 
 -- Starter projects. Existing slugs are not overwritten.
 insert into public.projects (slug,name_zh,name_en,subtitle_en,theme_color,status,is_public)
